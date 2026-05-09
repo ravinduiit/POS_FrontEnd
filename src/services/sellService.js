@@ -1,9 +1,8 @@
 import axiosInstance from "./axiosInstance";
 
 export const searchProductsForSale = async (keyword) => {
-  const response = await axiosInstance.post("/products/filter", {
-    name: keyword,
-    isActive: true,
+  const response = await axiosInstance.post("/products/search", {
+    keyword: keyword
   });
 
   return response.data;

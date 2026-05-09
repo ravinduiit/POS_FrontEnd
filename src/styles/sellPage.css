@@ -1,0 +1,353 @@
+/* src/styles/sellPage.css */
+
+.pos-workspace {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  /* CRITICAL: calc accounts for layout paddings (40px), SalesTopNavbar (~60px), and margins (20px). 
+     This ensures the proceed button is ALWAYS visible without scrolling the whole page. */
+  height: calc(100vh - 140px); 
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  box-sizing: border-box;
+}
+
+/* Base Card Styling */
+.command-bar-card, .cart-table-card, .summary-bar-card {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #d1d5db;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+/* --- 1. TOP COMMAND BAR --- */
+.command-bar-card {
+  display: flex;
+  padding: 15px 20px;
+  gap: 15px;
+  align-items: flex-end; 
+  flex-shrink: 0; /* Prevents this section from shrinking */
+}
+
+.search-group { flex: 1; }
+.qty-group { width: 100px; }
+.relative-container { position: relative; }
+
+.command-bar-card label {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: #4b5563;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.modern-input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.modern-input:focus {
+  border-color: #2563eb;
+  background-color: #eff6ff;
+}
+
+.text-center { text-align: center; }
+
+.add-btn {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  height: 47px; 
+  padding: 0 20px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.add-btn:hover:not(:disabled) { background-color: #1d4ed8; }
+.add-btn:disabled { background-color: #94a3b8; cursor: not-allowed; }
+
+/* SEARCH RESULTS OVERLAY TABLE */
+.search-results-overlay {
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  width: 100%;
+  background: white;
+  border: 2px solid #2563eb;
+  border-radius: 8px;
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.15);
+  z-index: 50;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.search-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.search-table th {
+  background: #f8fafc;
+  padding: 10px 15px;
+  text-align: left;
+  font-size: 12px;
+  color: #64748b;
+  text-transform: uppercase;
+  border-bottom: 1px solid #e2e8f0;
+  position: sticky;
+  top: 0;
+}
+
+.search-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #f1f5f9;
+  cursor: pointer;
+}
+
+.search-table tr.active-row {
+  background-color: #eff6ff;
+}
+
+.search-table tr:hover { background-color: #f8fafc; }
+
+/* --- 2. MIDDLE CART TABLE --- */
+.cart-table-card {
+  flex: 1; /* Pushes the summary bar to the bottom */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Stops whole page from scrolling */
+}
+
+.table-wrapper {
+  flex: 1;
+  overflow-y: auto; /* ONLY the table content scrolls */
+}
+
+.main-cart-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.main-cart-table th {
+  position: sticky;
+  top: 0;
+  background: #f8fafc;
+  padding: 14px 15px;
+  text-align: left;
+  font-size: 13px;
+  color: #64748b;
+  text-transform: uppercase;
+  border-bottom: 2px solid #cbd5e1;
+  z-index: 5;
+}
+
+.main-cart-table td {
+  padding: 14px 15px;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 15px;
+  color: #1e293b;
+}
+
+.even-row { background-color: #ffffff; }
+.odd-row { background-color: #f8fafc; }
+
+.w-50 { width: 50%; }
+.w-15 { width: 15%; }
+.w-5 { width: 5%; }
+.text-right { text-align: right; }
+.font-bold { font-weight: 700; }
+.text-primary { color: #2563eb; }
+
+.empty-state {
+  text-align: center;
+  padding: 40px !important;
+  color: #94a3b8;
+  font-style: italic;
+}
+
+.del-btn {
+  background: none;
+  border: none;
+  color: #ef4444;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 4px;
+}
+.del-btn:hover { background: #fee2e2; }
+
+/* --- 3. BOTTOM SUMMARY BAR --- */
+.summary-bar-card {
+  padding: 15px 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #1e293b; 
+  color: white;
+  flex-shrink: 0; /* Prevents this bar from getting squished */
+}
+
+.summary-info {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.summary-info h2 { margin: 0; font-size: 18px; font-weight: 600; color: #94a3b8; }
+.summary-info h1 { margin: 0; font-size: 28px; font-weight: 800; color: #22c55e; }
+
+.proceed-btn {
+  background-color: #22c55e;
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  font-size: 18px;
+  font-weight: 800;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.proceed-btn:hover:not(:disabled) { background-color: #16a34a; transform: scale(1.02); }
+.proceed-btn:disabled { background-color: #475569; color: #94a3b8; cursor: not-allowed; }
+
+/* --- 4. MODAL POPUP --- */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.bill-card {
+  background: white;
+  width: 400px;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.bill-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 10px;
+  margin-bottom: 5px;
+}
+
+.bill-card-header h4 { margin: 0; font-size: 20px; color: #1e293b; }
+.bill-card-header span { background: #dbeafe; color: #1e40af; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+
+.bill-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+  color: #475569;
+}
+
+.bill-input-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+
+.bill-input-group input, .bill-input-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+.bill-input-group input:focus, .bill-input-group select:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37,99,235,0.2);
+}
+
+.grand-total-box {
+  background: #f1f5f9;
+  padding: 15px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.grand-total-box span { color: #475569; font-weight: 600; }
+.grand-total-box strong { font-size: 22px; color: #0f172a; }
+
+.balance-box {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 0;
+  border-top: 2px dashed #cbd5e1;
+  font-size: 18px;
+  margin-top: 5px;
+}
+.balance-danger { color: #dc2626; font-size: 22px; }
+.balance-success { color: #16a34a; font-size: 22px; }
+
+.sell-complete-btn {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 15px;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 5px;
+}
+.sell-complete-btn:disabled { background: #94a3b8; cursor: not-allowed; }
+.sell-complete-btn:hover:not(:disabled) { background: #1d4ed8; }
+
+.new-sale-btn {
+  background: transparent;
+  color: #64748b;
+  border: 1px solid #cbd5e1;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.new-sale-btn:hover { background: #f1f5f9; color: #0f172a; }
+
+/* Toasts */
+.toast-message {
+  position: fixed;
+  bottom: 20px; left: 20px;
+  padding: 15px 25px;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  z-index: 10000;
+  box-shadow: 0 10px 15px rgba(0,0,0,0.2);
+}
+.input-selected-mode {
+  background-color: #f0fdf4 !important; /* Light green tint */
+  border-color: #22c55e !important;    /* Green border */
+  color: #166534;
+  font-weight: 800;
+}
+.toast-message.success { background: #16a34a; }
+.toast-message.error { background: #dc2626; }

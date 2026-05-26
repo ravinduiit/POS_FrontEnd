@@ -27,6 +27,9 @@ import UserList from "./pages/users/UserList";
 import AddUser from "./pages/users/AddUser";
 // import UserRoles from "./pages/users/UserRoles";
 // import SearchUsers from "./pages/users/SearchUsers";
+import CustomerLayout from "./pages/customers/CustomerLayout";
+import CustomerList from "./pages/customers/CustomerList";
+import AddCustomer from "./pages/customers/AddCustomer";
 
 function App() {
   return (
@@ -60,6 +63,11 @@ function App() {
         <Route path="add" element={<AddUser />} />
         {/* <Route path="roles" element={<UserRoles />} />
         <Route path="search" element={<SearchUsers />} /> */}
+      </Route>
+
+      <Route path="/customers" element={<CustomerLayout />}>
+        <Route index element={<CustomerList />} />
+        <Route path="add" element={<AddCustomer />} />
       </Route>
 
       <Route path="/settings" element={<Settings />} />

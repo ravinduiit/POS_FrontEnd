@@ -24,6 +24,7 @@ const navItems = [
   { id: 4, label: "Sales", icon: <FaShoppingCart />, path: "/sales" },
   { id: 5, label: "Users", icon: <FaUsers />, path: "/users" },
   { id: 6, label: "Settings", icon: <FaCog />, path: "/settings" },
+  { id: 7, label: "Customers", icon: <FaUsers />, path: "/customers" },
 ];
 
 function RightSidebar() {

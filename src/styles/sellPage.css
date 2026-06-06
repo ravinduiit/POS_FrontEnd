@@ -28,6 +28,23 @@
   flex-shrink: 0; /* Prevents this section from shrinking */
 }
 
+.saletype-group {
+  display: flex;
+  align-items: center; 
+  gap: 10px;           
+  width: auto;        
+}
+
+.saletype-group label {
+  display: inline-block !important;
+  margin-bottom: 0 !important;      
+  white-space: nowrap;            
+}
+
+.saletype-group select {
+  width: 140px;
+}
+
 .search-group { flex: 1; }
 .qty-group { width: 100px; }
 .relative-container { position: relative; }

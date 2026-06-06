@@ -17,6 +17,7 @@ export default function SellPage() {
   // Checkout States
   const [cutDebit, setCutDebit] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("cash");
+  const [saleType, setSaleType] = useState("grocery");
   const [customer_id, setCustomer_id] = useState(0);
   const [paidAmount, setPaidAmount] = useState("");
   const [discount, setDiscount] = useState(0);
@@ -119,20 +120,30 @@ export default function SellPage() {
       return;
     }
 
-    const price = Number(selectedProduct.sellingPrice || selectedProduct.price || 0);
+    const activePrice = saleType === "wholesale" 
+    ? Number(selectedProduct.wholesale_price || selectedProduct.sellingPrice || selectedProduct.price || 0)
+    : Number(selectedProduct.sellingPrice || selectedProduct.price || 0);
+    
+    //const price = Number(selectedProduct.sellingPrice || selectedProduct.price || 0);
+    
+    // const price = saleType === "wholesale"
+    // ? Number(selectedProduct.wholesale_price || selectedProduct.sellingPrice || selectedProduct.price || 0)
+    // : Number(selectedProduct.sellingPrice || selectedProduct.price || 0);
+    
     const existing = cartItems.find(i => i.product_id === selectedProduct.product_id);
     
     if (existing) {
       setCartItems(cartItems.map(i => i.product_id === selectedProduct.product_id 
-        ? { ...i, quantity: i.quantity + Number(quantity), lineTotal: (i.quantity + Number(quantity)) * price } 
+        ? { ...i, quantity: i.quantity + Number(quantity), sellingPrice: activePrice,
+          lineTotal: (i.quantity + Number(quantity)) * activePrice } 
         : i));
     } else {
       setCartItems([...cartItems, {
         product_id: selectedProduct.product_id,
         name: selectedProduct.name,
-        sellingPrice: selectedProduct.sellingPrice,
+        sellingPrice: activePrice,
         quantity: Number(quantity),
-        lineTotal: selectedProduct.sellingPrice * Number(quantity)
+        lineTotal: activePrice * Number(quantity)
       }]);
     }
 
@@ -142,6 +153,7 @@ export default function SellPage() {
     setSelectedProduct(null);
     setFilteredProducts([]);
     searchInputRef.current?.focus();
+
   };
 
   const removeCartItem = (id) => {
@@ -159,6 +171,7 @@ export default function SellPage() {
     setPaidAmount("");
     setDiscount(0);
     setPaymentMethod("cash");
+    setSaleType("grocery");
     setCutDebit(false);
     setCustomer_id(0);
     setShowPaymentModal(false);
@@ -184,7 +197,7 @@ export default function SellPage() {
     console.log("Initiating Sale with:", { items: cartItems, discount, paymentMethod,grandTotal_from_client: grandTotal, cut_debit: cutDebit, customer_id, paidAmount, createdBy: "Admin" });
     setSelling(true);
     try {
-      await createSale({ items: cartItems, discount, paymentMethod, cut_debit: cutDebit, grandTotal_from_client: grandTotal, customer_id, paidAmount, createdBy: "Admin" });
+      await createSale({ items: cartItems, discount, paymentMethod, sale_type: saleType, cut_debit: cutDebit, grandTotal_from_client: grandTotal, customer_id, paidAmount, createdBy: "Admin" });
       setSuccessMessage("Sale completed successfully!");
       handleClearCart();
     } catch (err) { 
@@ -197,6 +210,18 @@ export default function SellPage() {
   return (
     <div className="pos-workspace">
       
+      <div className="saletype-group">
+        <label><h3>Sale Type</h3></label>
+        <select
+          className="modern-input"
+          value={saleType}
+          onChange={(e) => setSaleType(e.target.value)}
+        >
+          <option value="grocery">Grocery</option>
+          <option value="wholesale">Wholesale</option>
+        </select>
+      </div>
+
       {/* TOP COMMAND BAR */}
       <div className="command-bar-card">
         <div className="search-group relative-container">
@@ -239,7 +264,9 @@ export default function SellPage() {
                     >
                       <td className="font-bold">{p.name}</td>
                       <td className="text-right text-primary font-bold">
-                        Rs. {p.sellingPrice || p.price}
+                        Rs. {saleType === "wholesale" 
+                          ? (p.wholesale_price ?? "N/A") 
+                          : (p.sellingPrice || p.price)}
                       </td>
                     </tr>
                   ))}
@@ -294,8 +321,13 @@ export default function SellPage() {
                   <tr key={item.product_id} className={index % 2 === 0 ? "even-row" : "odd-row"}>
                     <td className="font-bold">{item.name}</td>
                     <td className="text-center font-bold">{item.quantity}</td>
-                    <td className="text-right">Rs. {item.sellingPrice.toFixed(2)}</td>
-                    <td className="text-right font-bold text-primary">Rs. {item.lineTotal.toFixed(2)}</td>
+                    <td className="text-right">
+                      Rs. {Number(item.sellingPrice || 0).toFixed(2)}
+                    </td>
+                    
+                    <td className="text-right font-bold text-primary">
+                      Rs. {Number(item.lineTotal || 0).toFixed(2)}
+                    </td>
                     <td className="text-center">
                       <button className="del-btn" onClick={() => removeCartItem(item.product_id)}>✕</button>
                     </td>

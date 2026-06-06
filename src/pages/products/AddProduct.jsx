@@ -10,6 +10,7 @@ function AddProduct() {
     name: "",
     barcode: "",
     category_id: "",
+    wholesale_price: "",
     brand_id: "",
     unit: "",
     costPrice: "",
@@ -51,6 +52,7 @@ function AddProduct() {
         unit: formData.unit,
         costPrice: Number(formData.costPrice),
         sellingPrice: Number(formData.sellingPrice),
+        wholesale_price: Number(formData.wholesale_price),
         best_price: Number(formData.best_price),
         stockQty: Number(formData.stockQty),
         reorderLevel: Number(formData.reorderLevel),
@@ -69,6 +71,7 @@ function AddProduct() {
         brand_id: "",
         unit: "",
         costPrice: "",
+        wholesale_price:"",
         sellingPrice: "",
         best_price: "",
         stockQty: "",
@@ -205,13 +208,27 @@ function AddProduct() {
               />
             </div>
 
-             <div className="form-group">
+            <div className="form-group">
               <label>Best Price *</label>
               <input
                 type="number"
                 name="best_price"
                 placeholder="Enter selling price"
                 value={formData.best_price}
+                onChange={handleChange}
+                min="0"
+                step="0.01"
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label>wholesale Price *</label>
+              <input
+                type="number"
+                name="wholesale_price"
+                placeholder="Enter wholesale price"
+                value={formData.wholesale_price}
                 onChange={handleChange}
                 min="0"
                 step="0.01"

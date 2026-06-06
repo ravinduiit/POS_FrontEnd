@@ -207,6 +207,23 @@ export default function SellPage() {
     }
   };
 
+  const handleUpdateItemPrice = (productId, newPriceInput) => {
+    const verifiedPrice = Number(newPriceInput) || 0;
+
+    setCartItems((prevItems) =>
+      prevItems.map((item) => {
+        if (item.product_id === productId) {
+          return {
+            ...item,
+            sellingPrice: verifiedPrice,
+            lineTotal: verifiedPrice * item.quantity, // Instantly recalculates line total
+          };
+        }
+        return item;
+      })
+    );
+  };
+
   return (
     <div className="pos-workspace">
       
@@ -321,13 +338,30 @@ export default function SellPage() {
                   <tr key={item.product_id} className={index % 2 === 0 ? "even-row" : "odd-row"}>
                     <td className="font-bold">{item.name}</td>
                     <td className="text-center font-bold">{item.quantity}</td>
-                    <td className="text-right">
+                    {/* <td className="text-right">
                       Rs. {Number(item.sellingPrice || 0).toFixed(2)}
+                    </td> */}
+
+                    <td className="text-right">
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: "4px" }}>
+                        <span>Rs.</span>
+                        <input
+                          type="number"
+                          className="inline-price-input"
+                          value={item.sellingPrice === 0 ? "" : item.sellingPrice}
+                          placeholder="0.00"
+                          min="0"
+                          step="0.01"
+                          onChange={(e) => handleUpdateItemPrice(item.product_id, e.target.value)}
+                          onFocus={(e) => e.target.select()}
+                        />
+                      </div>
                     </td>
                     
                     <td className="text-right font-bold text-primary">
                       Rs. {Number(item.lineTotal || 0).toFixed(2)}
                     </td>
+
                     <td className="text-center">
                       <button className="del-btn" onClick={() => removeCartItem(item.product_id)}>✕</button>
                     </td>

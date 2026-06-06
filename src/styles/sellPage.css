@@ -368,3 +368,35 @@
 }
 .toast-message.success { background: #16a34a; }
 .toast-message.error { background: #dc2626; }
+
+/* Style for inline table inputs */
+.inline-price-input {
+  width: 90px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-bottom: 1px dashed #ccc; /* Subtle hint to the user that it can be edited */
+  text-align: right;
+  padding: 2px 4px;
+  font-size: inherit;
+  font-family: inherit;
+  color: inherit;
+  outline: none;
+}
+
+/* Highlight the field slightly when the user clicks inside to edit */
+.inline-price-input:focus {
+  border: 1px solid #007bff;
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.2);
+}
+
+/* Clean up standard browser number input spin arrows */
+.inline-price-input::-webkit-outer-spin-button,
+.inline-price-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.inline-price-input {
+  -moz-appearance: textfield;
+}

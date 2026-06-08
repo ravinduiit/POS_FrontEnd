@@ -15,12 +15,14 @@ function ProductDetails() {
   const [formData, setFormData] = useState({
     product_id: "",
     name: "",
+    sinhala_name: "",
     barcode: "",
     category: "",
     brand: "",
     unit: "",
     costPrice: "",
     sellingPrice: "",
+    wholesale_price: "",
     best_price: "",
     stockQty: "",
     reorderLevel: "",
@@ -52,6 +54,7 @@ function ProductDetails() {
       setFormData({
         product_id: product.product_id || "",
         name: product.name || "",
+        sinhala_name: product.sinhala_name || "",
         barcode: product.barcode || "",
 
         // supports both old and new field names
@@ -64,6 +67,7 @@ function ProductDetails() {
         best_price: product.best_price ?? "",
         stockQty: product.stockQty ?? "",
         reorderLevel: product.reorderLevel ?? "",
+        wholesale_price: product.wholesale_price ?? "",
         description: product.description || "",
         image: product.image || "",
         lastStockFillingDDate: product.lastStockFillingDDate
@@ -111,6 +115,7 @@ function ProductDetails() {
       const payload = {
         product_id: Number(formData.product_id),
         name: formData.name,
+        sinhala_name: formData.sinhala_name,
         barcode: formData.barcode,
         category: formData.category,
         brand: formData.brand,
@@ -118,6 +123,7 @@ function ProductDetails() {
         costPrice: Number(formData.costPrice),
         sellingPrice: Number(formData.sellingPrice),
         stockQty: Number(formData.stockQty),
+        wholesale_price: Number(formData.wholesale_price),
         reorderLevel: Number(formData.reorderLevel),
         best_price: Number(formData.best_price),
         description: formData.description,
@@ -142,6 +148,17 @@ function ProductDetails() {
       setUpdating(false);
     }
   };
+
+  useEffect(() => {
+  if (errorMessage || successMessage) {
+    const timer = setTimeout(() => {
+      setErrorMessage('');   
+      setSuccessMessage(''); 
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }
+}, [errorMessage, successMessage]);
 
   if (loading) {
     return <h2>Loading product details...</h2>;
@@ -183,11 +200,22 @@ function ProductDetails() {
             </div>
 
             <div className="form-group">
-              <label>Product Name *</label>
+              <label>Product Name (English)*</label>
               <input
                 type="text"
                 name="name"
                 value={formData.name}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Product Name (Sinhala)*</label>
+              <input
+                type="text"
+                name="sinhala_name"
+                value={formData.sinhala_name}
                 onChange={handleChange}
                 required
               />
@@ -269,6 +297,19 @@ function ProductDetails() {
                 required
               />
             </div>
+
+            <div className="form-group">
+              <label>Wholesale Price *</label>
+              <input
+                type="number"
+                name="wholesale_price"
+                value={formData.wholesale_price}
+                onChange={handleChange}
+                min="0"
+                step="0.01"
+                required
+              />
+            </div>
             
             <div className="form-group">
               <label>Best Price *</label>
@@ -317,7 +358,7 @@ function ProductDetails() {
               />
             </div>
 
-            <div className="form-group">
+            {/* <div className="form-group">
               <label>Image URL</label>
               <input
                 type="text"
@@ -325,7 +366,7 @@ function ProductDetails() {
                 value={formData.image}
                 onChange={handleChange}
               />
-            </div>
+            </div> */}
           </div>
 
           <div className="form-group full-width">
@@ -338,7 +379,7 @@ function ProductDetails() {
             ></textarea>
           </div>
 
-          {formData.image && (
+          {/* {formData.image && (
             <div className="form-group">
               <label>Image Preview</label>
               <img
@@ -353,7 +394,7 @@ function ProductDetails() {
                 }}
               />
             </div>
-          )}
+          )} */}
 
           <div className="form-actions">
             <button

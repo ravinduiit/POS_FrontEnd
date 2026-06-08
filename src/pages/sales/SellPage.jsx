@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createSale, searchProductsForSale } from "../../services/sellService";
+import {id_name_list} from "../../services/customerService";
 import "../../styles/sellPage.css";
 
 export default function SellPage() {
@@ -19,6 +20,7 @@ export default function SellPage() {
   const [paymentMethod, setPaymentMethod] = useState("cash");
   const [saleType, setSaleType] = useState("grocery");
   const [customer_id, setCustomer_id] = useState(0);
+  const [customerList, setCustomerList] = useState([]);
   const [paidAmount, setPaidAmount] = useState("");
   const [discount, setDiscount] = useState(0);
 
@@ -36,6 +38,22 @@ export default function SellPage() {
   const subtotal = useMemo(() => cartItems.reduce((t, i) => t + i.lineTotal, 0), [cartItems]);
   const grandTotal = useMemo(() => Math.max(subtotal - (Number(discount) || 0), 0), [subtotal, discount]);
   const balance = useMemo(() => (Number(paidAmount) || 0) - grandTotal, [paidAmount, grandTotal]);
+
+  useEffect(() => {
+    fetchCustomers();
+  }, []);
+
+  const fetchCustomers = async () => {
+    try {
+      const data = await id_name_list();
+      console.log("Customer List fetched on load:", data);
+      const customers = Array.isArray(data) ? data : data.customers || [];
+      setCustomerList(customers); 
+    } catch (err) {
+      setError("Failed to fetch customers");
+    }
+  };
+  
 
   // --- Search Logic ---
   useEffect(() => {
@@ -225,14 +243,22 @@ export default function SellPage() {
   };
 
   return (
-    <div className="pos-workspace">
+    <div 
+      className="pos-workspace"
+      style={{
+        backgroundColor: saleType === "wholesale" ? "#cde89b" : "",                  
+        transition: "background-color 0.3s ease" 
+      }}
+    >
       
       <div className="saletype-group">
         <label><h3>Sale Type</h3></label>
         <select
+          id="sale_select"
           className="modern-input"
           value={saleType}
           onChange={(e) => setSaleType(e.target.value)}
+          
         >
           <option value="grocery">Grocery</option>
           <option value="wholesale">Wholesale</option>
@@ -334,7 +360,7 @@ export default function SellPage() {
                   <td colSpan="5" className="empty-state">Cart is empty. Search to add products.</td>
                 </tr>
               ) : (
-                cartItems.map((item, index) => (
+                [...cartItems].reverse().map((item, index) => (
                   <tr key={item.product_id} className={index % 2 === 0 ? "even-row" : "odd-row"}>
                     <td className="font-bold">{item.name}</td>
                     <td className="text-center font-bold">{item.quantity}</td>
@@ -433,11 +459,12 @@ export default function SellPage() {
               <label>Customer </label>
               <select
                 value={customer_id}
-                onChange={(e) => setCustomerid(e.target.value)}
+                onChange={(e) => setCustomer_id(e.target.value)}
               >
-                <option value="0">0</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
+                <option value="0">Select Customer</option>
+                {customerList.map(c => (
+                  <option key={c.customer_id} value={c.customer_id}>{c.customer_id}</option>
+                ))}
               </select>
             </div>
 

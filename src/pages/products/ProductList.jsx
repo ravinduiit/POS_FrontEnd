@@ -23,6 +23,7 @@ function ProductList() {
 
   const [filters, setFilters] = useState({
     name: "",
+    barcode: "",
     category: "",
     brand: "",
     stockStatus: "",
@@ -88,6 +89,10 @@ function ProductList() {
 
       if (filters.name.trim()) {
         filterPayload.name = filters.name.trim();
+      }
+
+      if (filters.barcode.trim()) {
+        filterPayload.barcode = filters.barcode.trim();
       }
 
       if (filters.category.trim()) {
@@ -270,6 +275,17 @@ function ProductList() {
     loadProducts();
   }, []);
 
+  useEffect(() => {
+    if (errorMessage || successMessage) {
+      const timer = setTimeout(() => {
+        setErrorMessage('');  
+        setSuccessMessage('');
+      }, 2000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [errorMessage, successMessage]);
+
   if (loading) {
     return <h2>Loading products...</h2>;
   }
@@ -297,12 +313,22 @@ function ProductList() {
           </div>
 
           <div style={filterGroupStyle}>
+            <label style={filterLabelStyle}>Barcode</label>
+            <input
+              type="text"
+              name="barcode"
+              placeholder="Search by barcode"
+              value={filters.barcode}
+              onChange={handleFilterChange}
+              style={filterInputStyle}
+            />
+          </div>
+
+          <div style={filterGroupStyle}>
             <label style={filterLabelStyle}>Category</label>
             <input
               type="text"
               name="category"
-              placeholder="Enter category"
-              value={filters.category}
               onChange={handleFilterChange}
               style={filterInputStyle}
             />
@@ -379,15 +405,16 @@ function ProductList() {
         <table style={tableStyle}>
           <thead>
             <tr style={{ background: "#1f2937", color: "white" }}>
-              <th style={tableHeaderStyle}>Product ID</th>
+              {/* <th style={tableHeaderStyle}>Product ID</th> */}
               <th style={tableHeaderStyle}>Status</th>
               <th style={tableHeaderStyle}>Name</th>
               <th style={tableHeaderStyle}>Barcode</th>
               <th style={tableHeaderStyle}>Category</th>
-              <th style={tableHeaderStyle}>Best Price</th>
               <th style={tableHeaderStyle}>Price</th>
+              <th style={tableHeaderStyle}>Wholesale Price</th>
+              <th style={tableHeaderStyle}>Best Price</th>
               <th style={tableHeaderStyle}>Stock</th>
-              <th style={tableHeaderStyle}>Action</th>
+              <th style={tableHeaderStyle}></th>
             </tr>
           </thead>
 
@@ -398,7 +425,7 @@ function ProductList() {
                   key={product._id || product.product_id}
                   style={tableRowStyle}
                 >
-                  <td style={tableCellStyle}>{product.product_id}</td>
+                  {/* <td style={tableCellStyle}>{product.product_id}</td> */}
 
                   <td style={tableCellStyle}>
                     <button
@@ -442,11 +469,15 @@ function ProductList() {
                     {product.category || product.category_id || "-"}
                   </td>
 
+                  <td style={tableCellStyle}>Rs. {product.sellingPrice}</td>
+
+                  <td style={tableCellStyle}>
+                    {product.wholesalePrice ? `Rs. ${product.wholesalePrice}` : "-"}
+                  </td>
+
                   <td style={tableCellStyle}>
                     {product.best_price ? `Rs. ${product.best_price}` : "-"}
                   </td>
-
-                  <td style={tableCellStyle}>Rs. {product.sellingPrice}</td>
 
                   <td style={tableCellStyle} onClick={(e) => e.stopPropagation()}>
                     <input

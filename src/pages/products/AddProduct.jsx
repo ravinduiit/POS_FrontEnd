@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { addProduct } from "../../services/productService";
+import { useEffect } from "react";
+
 import "../../styles/productForm.css";
 
 function AddProduct() {
@@ -8,6 +10,7 @@ function AddProduct() {
 
   const [formData, setFormData] = useState({
     name: "",
+    sinhala_name: "",
     barcode: "",
     category_id: "",
     wholesale_price: "",
@@ -36,6 +39,17 @@ function AddProduct() {
     setSuccessMessage("");
   };
 
+  useEffect(() => {
+    if (errorMessage || successMessage) {
+      const timer = setTimeout(() => {
+        setErrorMessage('');   
+        setSuccessMessage(''); 
+      }, 2000); 
+
+      return () => clearTimeout(timer);
+    }
+  }, [errorMessage, successMessage]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -46,6 +60,7 @@ function AddProduct() {
 
       const productPayload = {
         name: formData.name,
+        sinhala_name: formData.sinhala_name,
         barcode: formData.barcode,
         category_id: Number(formData.category_id),
         brand_id: formData.brand_id ? Number(formData.brand_id) : "",
@@ -66,6 +81,7 @@ function AddProduct() {
 
       setFormData({
         name: "",
+        sinhala_name: "",
         barcode: "",
         category_id: "",
         brand_id: "",
@@ -116,12 +132,24 @@ function AddProduct() {
         <form onSubmit={handleSubmit}>
           <div className="form-grid">
             <div className="form-group">
-              <label>Product Name *</label>
+              <label>Product Name * (English)</label>
               <input
                 type="text"
                 name="name"
                 placeholder="Enter product name"
                 value={formData.name}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Product Name * (Sinhala)</label>
+              <input
+                type="text"
+                name="sinhala_name"
+                placeholder="Enter product name in Sinhala"
+                value={formData.sinhala_name}
                 onChange={handleChange}
                 required
               />
@@ -261,7 +289,7 @@ function AddProduct() {
               />
             </div>
 
-            <div className="form-group">
+            {/* <div className="form-group">
               <label>Image URL</label>
               <input
                 type="text"
@@ -270,7 +298,7 @@ function AddProduct() {
                 value={formData.image}
                 onChange={handleChange}
               />
-            </div>
+            </div> */}
           </div>
 
           <div className="form-group full-width">

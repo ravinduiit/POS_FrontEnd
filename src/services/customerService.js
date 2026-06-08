@@ -20,3 +20,8 @@ export const filterCustomers = async (filters) => {
   console.log("Filtered customers fetched:", response.data);
   return response.data;
 };
+
+export const id_name_list = async () => {
+  const response = await axiosInstance.get("/customers/id_name_list");
+  return response.data;
+};

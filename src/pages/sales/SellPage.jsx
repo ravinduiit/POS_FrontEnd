@@ -60,7 +60,6 @@ export default function SellPage() {
       setError("Failed to fetch customers");
     }
   };
-  
 
   // --- Search Logic ---
   useEffect(() => {

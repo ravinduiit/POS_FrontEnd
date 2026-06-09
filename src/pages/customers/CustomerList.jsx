@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import MainLayout from "../../components/layout/MainLayout";
 import CustomerTopNavbar from "./CustomerTopNavbar";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import {
   getCustomerList,
@@ -10,6 +11,7 @@ import {
 } from "../../services/customerService";
 
 function CustomerList() {
+  const navigate = useNavigate();
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filterLoading, setFilterLoading] = useState(false);
@@ -21,7 +23,6 @@ function CustomerList() {
 
   const [filters, setFilters] = useState({
     name: "",
-    mobile: "",
   });
 
   const setCustomerListFromResponse = (data) => {
@@ -82,12 +83,12 @@ function CustomerList() {
 
       const payload = {};
 
-      if (filters.name.trim()) {
-        payload.name = filters.name.trim();
+      if (filters.name) {
+        payload.name = filters.name;
       }
 
-      if (filters.mobile.trim()) {
-        payload.mobile = filters.mobile.trim();
+      if (filters.mobile) {
+        payload.mobile = filters.mobile;
       }
 
       if (filters.isActive === "active") {
@@ -120,10 +121,17 @@ function CustomerList() {
     }
   };
 
+  const handleRowClick = (customer_id) => {
+    navigate("/customers/details", {
+      state: {
+        customer_id,
+      },
+    });
+  };
+
   const handleClearFilters = async () => {
     setFilters({
       name: "",
-      mobile: "",
     });
 
     await loadCustomers();
@@ -164,6 +172,17 @@ function CustomerList() {
     }
   };
 
+  useEffect(() => {
+    if (successMessage || errorMessage) {
+      const timer = setTimeout(() => {
+        setSuccessMessage("");
+        setErrorMessage("");
+      }, 2500);
+
+      return () => clearTimeout(timer);
+    }
+  }, [successMessage, errorMessage]);
+
   if (loading) {
     return <h2>Loading customers...</h2>;
   }
@@ -193,7 +212,7 @@ function CustomerList() {
             />
           </div>
 
-          <div style={filterGroupStyle}>
+          {/* <div style={filterGroupStyle}>
             <label style={filterLabelStyle}>Mobile Number</label>
 
             <input
@@ -204,7 +223,7 @@ function CustomerList() {
               onChange={handleFilterChange}
               style={filterInputStyle}
             />
-          </div>
+          </div> */}
 
           {/* <div style={filterGroupStyle}>
             <label style={filterLabelStyle}>Status</label>
@@ -257,9 +276,10 @@ function CustomerList() {
               <th style={tableHeaderStyle}>Status</th>
               <th style={tableHeaderStyle}>Customer Name</th>
               <th style={tableHeaderStyle}>Mobile</th>
-              <th style={tableHeaderStyle}>Email</th>
-              <th style={tableHeaderStyle}>Address</th>
-              <th style={tableHeaderStyle}>Created Date</th>
+              {/* <th style={tableHeaderStyle}>Email</th> */}
+              {/* <th style={tableHeaderStyle}>Address</th> */}
+              {/* <th style={tableHeaderStyle}>Created Date</th> */}
+              <th style={tableHeaderStyle}>Total Due</th>
             </tr>
           </thead>
 
@@ -305,26 +325,16 @@ function CustomerList() {
                     </button>
                   </td>
 
-                  <td style={tableCellStyle}>
+                  <td style={clickableCellStyle} onClick={() => handleRowClick(customer.customer_id)}>
                     {customer.name || "-"}
                   </td>
 
                   <td style={tableCellStyle}>
-                    {customer.mobile || "-"}
+                    {customer.phone || "-"}
                   </td>
 
                   <td style={tableCellStyle}>
-                    {customer.email || "-"}
-                  </td>
-
-                  <td style={tableCellStyle}>
-                    {customer.address || "-"}
-                  </td>
-
-                  <td style={tableCellStyle}>
-                    {customer.createdAt
-                      ? new Date(customer.createdAt).toLocaleDateString()
-                      : "-"}
+                    {customer.total_due || "-"}
                   </td>
                 </tr>
               ))
@@ -402,6 +412,19 @@ const clearButtonStyle = {
   cursor: "pointer",
 };
 
+const tableCellStyle = {
+  padding: "12px",
+  borderBottom: "1px solid #e5e7eb",
+  fontSize: "14px",
+};
+
+const clickableCellStyle = {
+  ...tableCellStyle,
+  color: "#2563eb",
+  fontWeight: "700",
+  cursor: "pointer",
+};
+
 const refreshButtonStyle = {
   padding: "10px 16px",
   border: "none",
@@ -423,12 +446,6 @@ const tableStyle = {
 const tableHeaderStyle = {
   padding: "12px",
   textAlign: "left",
-  fontSize: "14px",
-};
-
-const tableCellStyle = {
-  padding: "12px",
-  borderBottom: "1px solid #e5e7eb",
   fontSize: "14px",
 };
 

@@ -1,10 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { addCategory } from "../../services/categoryBrandServise";
+import { addBrand } from "../../services/categoryBrandServise";
 import "../../styles/productForm.css";
-import { useEffect } from "react";
 
-function AddCategory() {
+function AddBrand() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -33,45 +32,44 @@ function AddCategory() {
       setLoading(true);
 
       if (!formData.name.trim()) {
-        setErrorMessage("Category name is required");
+        setErrorMessage("Brand name is required");
         return;
       }
 
-      const data = await addCategory({
+      const data = await addBrand({
         name: formData.name,
         description: formData.description,
       });
 
-      setSuccessMessage(data.message || "Category added successfully");
+      setSuccessMessage(data.message || "Brand added successfully");
 
-      // reset form
       setFormData({
         name: "",
         description: "",
       });
 
-      // auto redirect after 1.5s (optional)
       setTimeout(() => {
-        navigate("/categories");
+        navigate("/categories/brands");
       }, 1500);
 
     } catch (error) {
       setErrorMessage(
         error.response?.data?.error ||
           error.message ||
-          "Failed to add category"
+          "Failed to add brand"
       );
     } finally {
       setLoading(false);
     }
   };
 
+  // auto hide messages (2.5s)
   useEffect(() => {
     if (errorMessage || successMessage) {
       const timer = setTimeout(() => {
         setErrorMessage("");
         setSuccessMessage("");
-      }, 2500); // 2.5 seconds
+      }, 2500);
 
       return () => clearTimeout(timer);
     }
@@ -82,8 +80,8 @@ function AddCategory() {
       <div className="product-form-card">
 
         <div className="form-header">
-          <h1>Add Category</h1>
-          <p>Create a new product category</p>
+          <h1>Add Brand</h1>
+          <p>Create a new product brand</p>
         </div>
 
         {errorMessage && (
@@ -95,14 +93,14 @@ function AddCategory() {
         )}
 
         <form onSubmit={handleSubmit}>
-          
-          {/* CATEGORY NAME */}
+
+          {/* BRAND NAME */}
           <div className="form-group">
-            <label>Category Name *</label>
+            <label>Brand Name *</label>
             <input
               type="text"
               name="name"
-              placeholder="Enter category name"
+              placeholder="Enter brand name"
               value={formData.name}
               onChange={handleChange}
               required
@@ -114,7 +112,7 @@ function AddCategory() {
             <label>Description</label>
             <textarea
               name="description"
-              placeholder="Enter description (optional)"
+              placeholder="Enter brand description (optional)"
               value={formData.description}
               onChange={handleChange}
               rows="4"
@@ -126,13 +124,13 @@ function AddCategory() {
             <button
               type="button"
               className="cancel-btn"
-              onClick={() => navigate("/categories")}
+              onClick={() => navigate("/brands")}
             >
               Cancel
             </button>
 
             <button type="submit" className="submit-btn" disabled={loading}>
-              {loading ? "Saving..." : "Add Category"}
+              {loading ? "Saving..." : "Add Brand"}
             </button>
           </div>
 
@@ -143,4 +141,4 @@ function AddCategory() {
   );
 }
 
-export default AddCategory;
+export default AddBrand;

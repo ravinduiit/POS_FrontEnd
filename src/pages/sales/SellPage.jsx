@@ -4,9 +4,9 @@ import {id_name_list} from "../../services/customerService";
 import "../../styles/sellPage.css";
 
 const SHOP_DETAILS = {
-  name: "YOUR SHOP NAME",
-  address: "Your shop address",
-  phone: "0771234567",
+  name: "SENLAKA NILWALA BOOK SHOP",
+  address: "No 121,Deniyaya Rd, Akuressa",
+  phone: "0772504133",
 };
 
 export default function SellPage() {
@@ -231,13 +231,13 @@ export default function SellPage() {
               margin: 0;
               padding: 5mm;
               font-family: "Noto Sans Sinhala", "Iskoola Pota", "Nirmala UI", Arial, sans-serif;
-              font-size: 12px;
+              font-size: 18px;
               color: #000;
             }
             .center { text-align: center; }
             .line { border-top: 1px dashed #000; margin: 6px 0; }
             table { width: 100%; border-collapse: collapse; }
-            th, td { font-size: 11px; padding: 2px 0; vertical-align: top; }
+            th, td { font-size: 17px; padding: 2px 0; vertical-align: top; }
             .text-center { text-align: center; }
             .text-right { text-align: right; }
             .item-name { width: 42%; word-break: break-word; }
@@ -274,13 +274,24 @@ export default function SellPage() {
           <table>
             <tr><td>Subtotal</td><td class="text-right">Rs. ${safeNumber(saleData.subtotal)}</td></tr>
             <tr><td>Discount</td><td class="text-right">Rs. ${safeNumber(saleData.discount)}</td></tr>
-            <tr class="total-row"><td>Grand Total</td><td class="text-right">Rs. ${safeNumber(saleData.grandTotal)}</td></tr>
+            <tr/>
+            <tr class="total-row">
+  <td style="font-size:20px;font-weight:bold;">
+    Grand Total
+  </td>
+
+  <td class="text-right" style="font-size:28px;font-weight:900;">
+    Rs. ${safeNumber(saleData.grandTotal)}
+  </td>
+</tr>
             <tr><td>Paid</td><td class="text-right">Rs. ${safeNumber(saleData.paidAmount)}</td></tr>
             <tr><td>Balance</td><td class="text-right">Rs. ${safeNumber(saleData.balance)}</td></tr>
           </table>
 
           <div class="line"></div>
           <div class="center">ස්තුතියි! නැවත පැමිණෙන්න<br/>Thank You!</div>
+          <br/>
+          <div class="center style="font-size:18px;">Software By CodeWaves IT  <br/>0717775544</div>
 
           <script>
             window.onload = function() {
@@ -424,7 +435,7 @@ export default function SellPage() {
                 <thead>
                   <tr>
                     <th>Product Name</th>
-                    <th className="text-right">Price</th>
+                    <th1 className="text-right">Price</th1>
                   </tr>
                 </thead>
                 <tbody>

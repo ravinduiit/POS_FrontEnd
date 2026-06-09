@@ -400,3 +400,24 @@
 .inline-price-input {
   -moz-appearance: textfield;
 }
+
+.top-selectors-row {
+  display: flex;
+  flex-direction: row;
+  gap: 20px; /* Space between Sale Type and Customer dropdown selectors */
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* Modify your existing .saletype-group styling to keep elements aligned cleanly */
+.saletype-group {
+  display: flex;
+  align-items: center; 
+  gap: 10px;          
+  width: auto;        
+}
+
+.saletype-group h3 {
+  margin: 0; /* Prevents the h3 default margins from pushing elements out of alignment */
+  font-size: 16px;
+}

@@ -369,7 +369,7 @@ export default function SellPage() {
         transition: "background-color 0.3s ease" 
       }}
     >
-      
+    <div className="top-selectors-row">
       <div className="saletype-group">
         <label><h3>Sale Type</h3></label>
         <select
@@ -383,6 +383,21 @@ export default function SellPage() {
           <option value="wholesale">Wholesale</option>
         </select>
       </div>
+
+      <div className="saletype-group">
+        <label><h3>Customer</h3></label>
+        <select
+          value={customer_id}
+          className="modern-input"
+          onChange={(e) => setCustomer_id(e.target.value)}
+        >
+          <option value="0">Select Customer</option>
+          {customerList.map(c => (
+            <option key={c.customer_id} value={c.customer_id}>{c.customer_id } - {c.name}</option>
+          ))}
+        </select>
+      </div>
+    </div>
 
       {/* TOP COMMAND BAR */}
       <div className="command-bar-card">
@@ -590,7 +605,7 @@ export default function SellPage() {
               >
                 <option value="0">Select Customer</option>
                 {customerList.map(c => (
-                  <option key={c.customer_id} value={c.customer_id}>{c.customer_id}</option>
+                  <option key={c.customer_id} value={c.customer_id}>{c.customer_id } - {c.name}</option>
                 ))}
               </select>
             </div>

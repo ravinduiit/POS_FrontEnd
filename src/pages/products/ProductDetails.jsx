@@ -260,15 +260,15 @@ function ProductDetails() {
                 onChange={handleChange}
                 required
               >
-                <option value="">Select unit</option>
-                <option value="piece">piece</option>
-                <option value="kg">kg</option>
+                <option value="M">M</option>
+                <option value="Kg">Kg</option>
                 <option value="g">g</option>
-                <option value="liter">liter</option>
-                <option value="ml">ml</option>
-                <option value="box">box</option>
-                <option value="packet">packet</option>
-                <option value="bottle">bottle</option>
+                <option value="Liter">Liter</option>
+                <option value="Case">Case</option>
+                <option value="Packs">Packs</option>
+                <option value="Box">Box</option>
+                <option value="Bottle">Bottle</option>
+                <option value="Pcs">Pcs</option>
               </select>
             </div>
 

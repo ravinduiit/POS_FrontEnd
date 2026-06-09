@@ -472,7 +472,7 @@ function ProductList() {
                   <td style={tableCellStyle}>Rs. {product.sellingPrice}</td>
 
                   <td style={tableCellStyle}>
-                    {product.wholesalePrice ? `Rs. ${product.wholesalePrice}` : "-"}
+                    {product.wholesale_price ? `Rs. ${product.wholesale_price}` : "-"}
                   </td>
 
                   <td style={tableCellStyle}>

@@ -12,12 +12,12 @@ function CategoryTopNavbar() {
         Add Category
       </NavLink>
 
-      <NavLink to="/categories/active" className={({ isActive }) => isActive ? "section-nav-item section-nav-active" : "section-nav-item"}>
-        Active Categories
+      <NavLink to="/categories/brands" className={({ isActive }) => isActive ? "section-nav-item section-nav-active" : "section-nav-item"}>
+        Brand List
       </NavLink>
 
-      <NavLink to="/categories/search" className={({ isActive }) => isActive ? "section-nav-item section-nav-active" : "section-nav-item"}>
-        Search / Filter
+      <NavLink to="/categories/addBrand" className={({ isActive }) => isActive ? "section-nav-item section-nav-active" : "section-nav-item"}>
+        Add Brand
       </NavLink>
     </div>
   );

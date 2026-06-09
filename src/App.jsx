@@ -13,8 +13,6 @@ import ProductDetails from "./pages/products/ProductDetails";
 import CategoryLayout from "./pages/categories/CategoryLayout";
 import CategoryList from "./pages/categories/CategoryList";
 import AddCategory from "./pages/categories/AddCategory";
-// import ActiveCategories from "./pages/categories/ActiveCategories";
-// import SearchCategories from "./pages/categories/SearchCategories";
 
 import SalesLayout from "./pages/sales/SalesLayout";
 import SellPage from "./pages/sales/SellPage";
@@ -30,6 +28,9 @@ import AddUser from "./pages/users/AddUser";
 import CustomerLayout from "./pages/customers/CustomerLayout";
 import CustomerList from "./pages/customers/CustomerList";
 import AddCustomer from "./pages/customers/AddCustomer";
+import CustomerDetails from "./pages/customers/CustomerDetails";
+import AddBrand from "./pages/categories/AddBrand";
+import BrandList from "./pages/categories/BrandList";
 
 function App() {
   return (
@@ -48,8 +49,8 @@ function App() {
       <Route path="/categories" element={<CategoryLayout />}>
         <Route index element={<CategoryList />} />
         <Route path="add" element={<AddCategory />} />
-        {/* <Route path="active" element={<ActiveCategories />} />
-        <Route path="search" element={<SearchCategories />} /> */}
+        <Route path="addBrand" element={<AddBrand />} />
+        <Route path="brands" element={<BrandList />} />
       </Route>
 
       <Route path="/sales" element={<SalesLayout />}>
@@ -69,6 +70,7 @@ function App() {
       <Route path="/customers" element={<CustomerLayout />}>
         <Route index element={<CustomerList />} />
         <Route path="add" element={<AddCustomer />} />
+        <Route path="details" element={<CustomerDetails />} />
       </Route>
 
       <Route path="/settings" element={<Settings />} />

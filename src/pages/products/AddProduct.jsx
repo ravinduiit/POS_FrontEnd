@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { addProduct } from "../../services/productService";
+import {brandlst, categorylist} from "../../services/categoryBrandServise"
 import { useEffect } from "react";
 
 import "../../styles/productForm.css";
@@ -28,6 +29,8 @@ function AddProduct() {
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [categoryList, setCategoryList] = useState([]);
+  const [brandList, setBrandList] = useState([]);
 
   const handleChange = (e) => {
     setFormData({
@@ -49,6 +52,40 @@ function AddProduct() {
       return () => clearTimeout(timer);
     }
   }, [errorMessage, successMessage]);
+
+  useEffect(() => {
+    fetchcategorylist()
+    fetchbrandlst()
+  }, []);
+
+  const fetchbrandlst = async () => {
+    try {
+      const data = await brandlst();
+
+      const brands = Array.isArray(data)
+        ? data
+        : data?.brands || [];
+
+      setBrandList(brands);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to fetch brand");
+    }
+  };
+
+  const fetchcategorylist = async () => {
+    try {
+      const data = await categorylist();
+
+      const categories = Array.isArray(data.categories)
+        ? data.categories
+        : [];
+      setCategoryList(categories);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to fetch category");
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -167,26 +204,38 @@ function AddProduct() {
             </div>
 
             <div className="form-group">
-              <label>Category ID *</label>
-              <input
-                type="number"
+              <label>Category *</label>
+              <select
                 name="category_id"
-                placeholder="Enter category ID"
-                value={formData.category_id}
+                value={formData.category_id || 0}
                 onChange={handleChange}
                 required
-              />
+              >
+                <option value={0}>Select Category</option>
+
+                {categoryList.map((cat) => (
+                  <option key={cat.category_id} value={cat.category_id}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div className="form-group">
-              <label>Brand ID</label>
-              <input
-                type="number"
+              <label>Brand</label>
+              <select
                 name="brand_id"
-                placeholder="Enter brand ID"
-                value={formData.brand_id}
+                value={formData.brand_id || 0}
                 onChange={handleChange}
-              />
+              >
+                <option value={0}>Select Brand</option>
+
+                {brandList.map((brand) => (
+                  <option key={brand.brand_id} value={brand.brand_id}>
+                    {brand.name}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div className="form-group">
@@ -197,14 +246,15 @@ function AddProduct() {
                 onChange={handleChange}
                 required
               >
-                <option value="">Select unit</option>
-                <option value="pcs">pcs</option>
-                <option value="kg">kg</option>
+                <option value="M">M</option>
+                <option value="Kg">Kg</option>
                 <option value="g">g</option>
-                <option value="l">l</option>
-                <option value="ml">ml</option>
-                <option value="box">box</option>
-                <option value="pack">pack</option>
+                <option value="Liter">Liter</option>
+                <option value="Case">Case</option>
+                <option value="Packs">Packs</option>
+                <option value="Box">Box</option>
+                <option value="Bottle">Bottle</option>
+                <option value="Pcs">Pcs</option>
               </select>
             </div>
 

@@ -3,6 +3,12 @@ import { createSale, searchProductsForSale } from "../../services/sellService";
 import {id_name_list} from "../../services/customerService";
 import "../../styles/sellPage.css";
 
+const SHOP_DETAILS = {
+  name: "YOUR SHOP NAME",
+  address: "Your shop address",
+  phone: "0771234567",
+};
+
 export default function SellPage() {
   // Input States
   const [keyword, setKeyword] = useState("");
@@ -28,6 +34,7 @@ export default function SellPage() {
   const [selling, setSelling] = useState(false);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [lastPrintedBill, setLastPrintedBill] = useState(null);
 
   // Refs for Keyboard Focus Flow
   const searchInputRef = useRef(null);
@@ -152,13 +159,14 @@ export default function SellPage() {
     
     if (existing) {
       setCartItems(cartItems.map(i => i.product_id === selectedProduct.product_id 
-        ? { ...i, quantity: i.quantity + Number(quantity), sellingPrice: activePrice,
+        ? { ...i, sinhala_name: i.sinhala_name || selectedProduct.sinhala_name || selectedProduct.name, quantity: i.quantity + Number(quantity), sellingPrice: activePrice,
           lineTotal: (i.quantity + Number(quantity)) * activePrice } 
         : i));
     } else {
       setCartItems([...cartItems, {
         product_id: selectedProduct.product_id,
         name: selectedProduct.name,
+        sinhala_name: selectedProduct.sinhala_name || selectedProduct.name,
         sellingPrice: activePrice,
         quantity: Number(quantity),
         lineTotal: activePrice * Number(quantity)
@@ -198,6 +206,103 @@ export default function SellPage() {
     searchInputRef.current?.focus();
   };
 
+  const printReceipt = (saleData) => {
+    const safeNumber = (value) => Number(value || 0).toFixed(2);
+
+    const itemsHtml = saleData.items.map((item) => {
+      const productName = item.sinhala_name || item.sinhalaName || item.name || "-";
+      return `
+        <tr>
+          <td class="item-name">${productName}</td>
+          <td class="text-center">${item.quantity}</td>
+          <td class="text-right">${safeNumber(item.sellingPrice)}</td>
+          <td class="text-right">${safeNumber(item.lineTotal)}</td>
+        </tr>
+      `;
+    }).join("");
+
+    const receiptHtml = `
+      <html>
+        <head>
+          <title>Bill Receipt</title>
+          <style>
+            @page { size: 80mm auto; margin: 0; }
+            body {
+              width: 80mm;
+              margin: 0;
+              padding: 5mm;
+              font-family: "Noto Sans Sinhala", "Iskoola Pota", "Nirmala UI", Arial, sans-serif;
+              font-size: 12px;
+              color: #000;
+            }
+            .center { text-align: center; }
+            .line { border-top: 1px dashed #000; margin: 6px 0; }
+            table { width: 100%; border-collapse: collapse; }
+            th, td { font-size: 11px; padding: 2px 0; vertical-align: top; }
+            .text-center { text-align: center; }
+            .text-right { text-align: right; }
+            .item-name { width: 42%; word-break: break-word; }
+            .total-row td { font-weight: bold; font-size: 13px; }
+            h3 { margin: 0 0 3px; font-size: 16px; }
+          </style>
+        </head>
+        <body>
+          <div class="center">
+            <h3>${SHOP_DETAILS.name}</h3>
+            <div>${SHOP_DETAILS.address}</div>
+            <div>Tel: ${SHOP_DETAILS.phone}</div>
+          </div>
+
+          <div class="line"></div>
+          <div>Date: ${new Date().toLocaleString()}</div>
+          <div>Payment: ${saleData.paymentMethod}</div>
+          <div>Sale Type: ${saleData.saleType}</div>
+          <div class="line"></div>
+
+          <table>
+            <thead>
+              <tr>
+                <th style="text-align:left;">භාණ්ඩය</th>
+                <th class="text-center">Qty</th>
+                <th class="text-right">මිල</th>
+                <th class="text-right">එකතුව</th>
+              </tr>
+            </thead>
+            <tbody>${itemsHtml}</tbody>
+          </table>
+
+          <div class="line"></div>
+          <table>
+            <tr><td>Subtotal</td><td class="text-right">Rs. ${safeNumber(saleData.subtotal)}</td></tr>
+            <tr><td>Discount</td><td class="text-right">Rs. ${safeNumber(saleData.discount)}</td></tr>
+            <tr class="total-row"><td>Grand Total</td><td class="text-right">Rs. ${safeNumber(saleData.grandTotal)}</td></tr>
+            <tr><td>Paid</td><td class="text-right">Rs. ${safeNumber(saleData.paidAmount)}</td></tr>
+            <tr><td>Balance</td><td class="text-right">Rs. ${safeNumber(saleData.balance)}</td></tr>
+          </table>
+
+          <div class="line"></div>
+          <div class="center">ස්තුතියි! නැවත පැමිණෙන්න<br/>Thank You!</div>
+
+          <script>
+            window.onload = function() {
+              window.print();
+              setTimeout(function() { window.close(); }, 500);
+            };
+          </script>
+        </body>
+      </html>
+    `;
+
+    const printWindow = window.open("", "_blank", "width=400,height=600");
+    if (!printWindow) {
+      setError("Print popup blocked. Please allow popups and try again.");
+      return;
+    }
+    printWindow.document.open();
+    printWindow.document.write(receiptHtml);
+    printWindow.document.close();
+  };
+
   const handleSell = async () => {
     if (cartItems.length === 0 || balance < 0) return;
     if (cutDebit && customer_id === "0") {
@@ -215,7 +320,22 @@ export default function SellPage() {
     console.log("Initiating Sale with:", { items: cartItems, discount, paymentMethod,grandTotal_from_client: grandTotal, cut_debit: cutDebit, customer_id, paidAmount, createdBy: "Admin" });
     setSelling(true);
     try {
-      await createSale({ items: cartItems, discount, paymentMethod, sale_type: saleType, cut_debit: cutDebit, grandTotal_from_client: grandTotal, customer_id, paidAmount, createdBy: "Admin" });
+      const salePayload = { items: cartItems, discount, paymentMethod, sale_type: saleType, cut_debit: cutDebit, grandTotal_from_client: grandTotal, customer_id, paidAmount, createdBy: "Admin" };
+      await createSale(salePayload);
+
+      const billData = {
+        items: cartItems,
+        subtotal,
+        discount: Number(discount) || 0,
+        grandTotal,
+        paidAmount: Number(paidAmount) || 0,
+        balance,
+        paymentMethod,
+        saleType,
+      };
+      setLastPrintedBill(billData);
+      printReceipt(billData);
+
       setSuccessMessage("Sale completed successfully!");
       handleClearCart();
     } catch (err) { 
@@ -274,7 +394,7 @@ export default function SellPage() {
             type="text"
             className={`modern-input ${selectedProduct ? "input-selected-mode" : ""}`}
             //placeholder={selectedProduct ? `Selected: ${selectedProduct.name} - Press Enter on Qty` : "Type name or scan barcode..."}
-            value={selectedProduct ? selectedProduct.name : keyword}
+            value={selectedProduct ? (selectedProduct.sinhala_name || selectedProduct.name) : keyword}
             onChange={(e) => {
               if (selectedProduct) setSelectedProduct(null); 
               setKeyword(e.target.value);
@@ -362,7 +482,7 @@ export default function SellPage() {
               ) : (
                 [...cartItems].reverse().map((item, index) => (
                   <tr key={item.product_id} className={index % 2 === 0 ? "even-row" : "odd-row"}>
-                    <td className="font-bold">{item.name}</td>
+                    <td className="font-bold">{item.sinhala_name || item.name}</td>
                     <td className="text-center font-bold">{item.quantity}</td>
                     {/* <td className="text-right">
                       Rs. {Number(item.sellingPrice || 0).toFixed(2)}
@@ -411,6 +531,14 @@ export default function SellPage() {
           onClick={openPaymentModal}
         >
           PROCEED PAYMENT [F9]
+        </button>
+        <button
+          type="button"
+          className="proceed-btn"
+          disabled={!lastPrintedBill}
+          onClick={() => lastPrintedBill && printReceipt(lastPrintedBill)}
+        >
+          Reprint Last Bill
         </button>
       </div>
 

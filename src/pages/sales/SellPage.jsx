@@ -5,8 +5,8 @@ import "../../styles/sellPage.css";
 
 const SHOP_DETAILS = {
   name: "SENLAKA NILWALA BOOK SHOP",
-  address: "Your shop address",
-  phone: "0717775544",
+  address: "No 121,Deniyaya Rd, Akuressa",
+  phone: "0772504133",
 };
 
 export default function SellPage() {

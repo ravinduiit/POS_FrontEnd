@@ -1,0 +1,6 @@
+Wallet frontend added:
+- User /payments page is now Wallet / Top-up / Withdraw page.
+- Users can top up by uploading slip.
+- Users can request withdrawals with bank details.
+- Buy Ticket and Raffle Draw pages now buy directly using wallet points.
+- Admin has /admin/wallet for top-up approvals, withdrawal processing, and user wallet management.

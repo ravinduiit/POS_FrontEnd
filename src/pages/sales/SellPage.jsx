@@ -4,9 +4,9 @@ import {id_name_list} from "../../services/customerService";
 import "../../styles/sellPage.css";
 
 const SHOP_DETAILS = {
-  name: "YOUR SHOP NAME",
-  address: "Your shop address",
-  phone: "0771234567",
+  name: "SENLAKA NILWALA BOOK SHOP",
+  address: "Deniyaya Rd,Akuressa",
+  phone: "0772504133",
 };
 
 export default function SellPage() {
@@ -204,103 +204,318 @@ export default function SellPage() {
     setSuccessMessage("");
     searchInputRef.current?.focus();
   };
+const printReceipt = (saleData) => {
+  const safeNumber = (value) => Number(value || 0).toFixed(2);
 
-  const printReceipt = (saleData) => {
-    const safeNumber = (value) => Number(value || 0).toFixed(2);
+  const itemsHtml = saleData.items.map((item, index) => {
+    const productName = item.sinhala_name || item.sinhalaName || item.name || "-";
 
-    const itemsHtml = saleData.items.map((item) => {
-      const productName = item.sinhala_name || item.sinhalaName || item.name || "-";
-      return `
-        <tr>
-          <td class="item-name">${productName}</td>
-          <td class="text-center">${item.quantity}</td>
-          <td class="text-right">${safeNumber(item.sellingPrice)}</td>
-          <td class="text-right">${safeNumber(item.lineTotal)}</td>
-        </tr>
-      `;
-    }).join("");
+    return `
+      <tr>
+        <td class="item-no">${index + 1}</td>
+        <td class="item-name">${productName}</td>
+        <td class="text-center">${item.quantity}</td>
+        <td class="text-right">${safeNumber(item.sellingPrice)}</td>
+        <td class="text-right">${safeNumber(item.lineTotal)}</td>
+      </tr>
+    `;
+  }).join("");
 
-    const receiptHtml = `
-      <html>
-        <head>
-          <title>Bill Receipt</title>
-          <style>
-            @page { size: 80mm auto; margin: 0; }
-            body {
-              width: 80mm;
-              margin: 0;
-              padding: 5mm;
-              font-family: "Noto Sans Sinhala", "Iskoola Pota", "Nirmala UI", Arial, sans-serif;
-              font-size: 12px;
-              color: #000;
-            }
-            .center { text-align: center; }
-            .line { border-top: 1px dashed #000; margin: 6px 0; }
-            table { width: 100%; border-collapse: collapse; }
-            th, td { font-size: 11px; padding: 2px 0; vertical-align: top; }
-            .text-center { text-align: center; }
-            .text-right { text-align: right; }
-            .item-name { width: 42%; word-break: break-word; }
-            .total-row td { font-weight: bold; font-size: 13px; }
-            h3 { margin: 0 0 3px; font-size: 16px; }
-          </style>
-        </head>
-        <body>
-          <div class="center">
-            <h3>${SHOP_DETAILS.name}</h3>
-            <div>${SHOP_DETAILS.address}</div>
-            <div>Tel: ${SHOP_DETAILS.phone}</div>
-          </div>
+  const receiptHtml = `
+    <html>
+      <head>
+        <title>Bill Receipt</title>
+        <style>
+          @page { size: 80mm auto; margin: 0; }
 
-          <div class="line"></div>
+          body {
+            width: 80mm;
+            margin: 0;
+            padding: 4mm;
+            font-family: "Noto Sans Sinhala", "Iskoola Pota", "Nirmala UI", Arial, sans-serif;
+            font-size: 12px;
+            color: #000;
+          }
+
+          .center { text-align: center; }
+          .text-right { text-align: right; }
+          .text-center { text-align: center; }
+
+          .shop-name {
+            font-size: 22px;
+            font-weight: 900;
+            margin: 0;
+            line-height: 1.2;
+            text-transform: uppercase;
+          }
+
+          .shop-info {
+            font-size: 14px;
+            line-height: 1.3;
+          }
+
+          .bill-title {
+            font-size: 15px;
+            font-weight: 900;
+            border-top: 1px solid #000;
+            border-bottom: 1px solid #000;
+            padding: 4px 0;
+            margin: 6px 0;
+          }
+
+          .meta {
+            font-size: 13px;
+            line-height: 1.4;
+          }
+
+          .line {
+            border-top: 1px dashed #000;
+            margin: 6px 0;
+          }
+
+          table {
+            width: 100%;
+            border-collapse: collapse;
+          }
+
+          th {
+            font-size: 15px;
+            font-weight: 900;
+            border-bottom: 1px solid #000;
+            padding: 3px 0;
+          }
+
+          td {
+            font-size: 15px;
+            padding: 3px 0;
+            vertical-align: top;
+          }
+
+          .item-no {
+            width: 8%;
+            font-size: 15px;
+          }
+
+          .item-name {
+            width: 38%;
+            word-break: break-word;
+            font-size: 15px;
+            font-weight: 700;
+          }
+
+          .summary-table td {
+            font-size: 16px;
+            padding: 3px 0;
+          }
+
+          .total-row td {
+            font-size: 20px;
+            font-weight: 900;
+            border-top: 2px solid #000;
+            border-bottom: 2px solid #000;
+            padding: 6px 0;
+          }
+
+          .thank-you {
+            font-size: 14px;
+            font-weight: 900;
+            line-height: 1.4;
+            margin-top: 6px;
+          }
+
+          .software {
+            font-size: 12px;
+            margin-top: 6px;
+          }
+        </style>
+      </head>
+
+      <body>
+        <div class="center">
+          <div class="shop-name">${SHOP_DETAILS.name}</div>
+          <div class="shop-info">${SHOP_DETAILS.address}</div>
+          <div class="shop-info">Tel: ${SHOP_DETAILS.phone}</div>
+        </div>
+
+        <div class="bill-title center">SALES RECEIPT</div>
+
+        <div class="meta">
           <div>Date: ${new Date().toLocaleString()}</div>
           <div>Payment: ${saleData.paymentMethod}</div>
           <div>Sale Type: ${saleData.saleType}</div>
-          <div class="line"></div>
+        </div>
 
-          <table>
-            <thead>
-              <tr>
-                <th style="text-align:left;">භාණ්ඩය</th>
-                <th class="text-center">Qty</th>
-                <th class="text-right">මිල</th>
-                <th class="text-right">එකතුව</th>
-              </tr>
-            </thead>
-            <tbody>${itemsHtml}</tbody>
-          </table>
+        <div class="line"></div>
 
-          <div class="line"></div>
-          <table>
-            <tr><td>Subtotal</td><td class="text-right">Rs. ${safeNumber(saleData.subtotal)}</td></tr>
-            <tr><td>Discount</td><td class="text-right">Rs. ${safeNumber(saleData.discount)}</td></tr>
-            <tr class="total-row"><td>Grand Total</td><td class="text-right">Rs. ${safeNumber(saleData.grandTotal)}</td></tr>
-            <tr><td>Paid</td><td class="text-right">Rs. ${safeNumber(saleData.paidAmount)}</td></tr>
-            <tr><td>Balance</td><td class="text-right">Rs. ${safeNumber(saleData.balance)}</td></tr>
-          </table>
+        <table>
+          <thead>
+            <tr>
+              <th class="text-left">#</th>
+              <th style="text-align:left;">භාණ්ඩය</th>
+              <th class="text-center">Qty</th>
+              <th class="text-right">Price</th>
+              <th class="text-right">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${itemsHtml}
+          </tbody>
+        </table>
 
-          <div class="line"></div>
-          <div class="center">ස්තුතියි! නැවත පැමිණෙන්න<br/>Thank You!</div>
+        <div class="line"></div>
 
-          <script>
-            window.onload = function() {
-              window.print();
-              setTimeout(function() { window.close(); }, 500);
-            };
-          </script>
-        </body>
-      </html>
-    `;
+        <table class="summary-table">
+          <tr>
+            <td>Subtotal</td>
+            <td class="text-right">Rs. ${safeNumber(saleData.subtotal)}</td>
+          </tr>
+          <tr>
+            <td>Discount</td>
+            <td class="text-right">Rs. ${safeNumber(saleData.discount)}</td>
+          </tr>
+          <tr class="total-row">
+            <td>Grand Total</td>
+            <td class="text-right">Rs. ${safeNumber(saleData.grandTotal)}</td>
+          </tr>
+          <tr>
+            <td>Paid</td>
+            <td class="text-right">Rs. ${safeNumber(saleData.paidAmount)}</td>
+          </tr>
+          <tr>
+            <td>Balance</td>
+            <td class="text-right">Rs. ${safeNumber(saleData.balance)}</td>
+          </tr>
+        </table>
 
-    const printWindow = window.open("", "_blank", "width=400,height=600");
-    if (!printWindow) {
-      setError("Print popup blocked. Please allow popups and try again.");
-      return;
-    }
-    printWindow.document.open();
-    printWindow.document.write(receiptHtml);
-    printWindow.document.close();
-  };
+        <div class="line"></div>
+
+        <div class="center thank-you">
+          ස්තුතියි! නැවත පැමිණෙන්න<br/>
+          Thank You!
+        </div>
+
+        <div class="center software">
+          Software By CodeWaves IT   0717775544<br/>
+          
+        </div>
+
+        <script>
+          window.onload = function() {
+            window.print();
+            setTimeout(function() { window.close(); }, 500);
+          };
+        </script>
+      </body>
+    </html>
+  `;
+
+  const printWindow = window.open("", "_blank", "width=400,height=600");
+
+  if (!printWindow) {
+    setError("Print popup blocked. Please allow popups and try again.");
+    return;
+  }
+
+  printWindow.document.open();
+  printWindow.document.write(receiptHtml);
+  printWindow.document.close();
+};
+  // const printReceipt = (saleData) => {
+  //   const safeNumber = (value) => Number(value || 0).toFixed(2);
+
+  //   const itemsHtml = saleData.items.map((item) => {
+  //     const productName = item.sinhala_name || item.sinhalaName || item.name || "-";
+  //     return `
+  //       <tr>
+  //         <td class="item-name">${productName}</td>
+  //         <td class="text-center">${item.quantity}</td>
+  //         <td class="text-right">${safeNumber(item.sellingPrice)}</td>
+  //         <td class="text-right">${safeNumber(item.lineTotal)}</td>
+  //       </tr>
+  //     `;
+  //   }).join("");
+
+  //   const receiptHtml = `
+  //     <html>
+  //       <head>
+  //         <title>Bill Receipt</title>
+  //         <style>
+  //           @page { size: 80mm auto; margin: 0; }
+  //           body {
+  //             width: 80mm;
+  //             margin: 0;
+  //             padding: 5mm;
+  //             font-family: "Noto Sans Sinhala", "Iskoola Pota", "Nirmala UI", Arial, sans-serif;
+  //             font-size: 12px;
+  //             color: #000;
+  //           }
+  //           .center { text-align: center; }
+  //           .line { border-top: 1px dashed #000; margin: 6px 0; }
+  //           table { width: 100%; border-collapse: collapse; }
+  //           th, td { font-size: 11px; padding: 2px 0; vertical-align: top; }
+  //           .text-center { text-align: center; }
+  //           .text-right { text-align: right; }
+  //           .item-name { width: 42%; word-break: break-word; }
+  //           .total-row td { font-weight: bold; font-size: 13px; }
+  //           h3 { margin: 0 0 3px; font-size: 16px; }
+  //         </style>
+  //       </head>
+  //       <body>
+  //         <div class="center">
+  //           <h3>${SHOP_DETAILS.name}</h3>
+  //           <div>${SHOP_DETAILS.address}</div>
+  //           <div>Tel: ${SHOP_DETAILS.phone}</div>
+  //         </div>
+
+  //         <div class="line"></div>
+  //         <div>Date: ${new Date().toLocaleString()}</div>
+  //         <div>Payment: ${saleData.paymentMethod}</div>
+  //         <div>Sale Type: ${saleData.saleType}</div>
+  //         <div class="line"></div>
+
+  //         <table>
+  //           <thead>
+  //             <tr>
+  //               <th style="text-align:left;">භාණ්ඩය</th>
+  //               <th class="text-center">Qty</th>
+  //               <th class="text-right">මිල</th>
+  //               <th class="text-right">එකතුව</th>
+  //             </tr>
+  //           </thead>
+  //           <tbody>${itemsHtml}</tbody>
+  //         </table>
+
+  //         <div class="line"></div>
+  //         <table>
+  //           <tr><td>Subtotal</td><td class="text-right">Rs. ${safeNumber(saleData.subtotal)}</td></tr>
+  //           <tr><td>Discount</td><td class="text-right">Rs. ${safeNumber(saleData.discount)}</td></tr>
+  //           <tr class="total-row"><td>Grand Total</td><td class="text-right">Rs. ${safeNumber(saleData.grandTotal)}</td></tr>
+  //           <tr><td>Paid</td><td class="text-right">Rs. ${safeNumber(saleData.paidAmount)}</td></tr>
+  //           <tr><td>Balance</td><td class="text-right">Rs. ${safeNumber(saleData.balance)}</td></tr>
+  //         </table>
+
+  //         <div class="line"></div>
+  //         <div class="center">ස්තුතියි! නැවත පැමිණෙන්න<br/>Thank You!</div>
+
+  //         <script>
+  //           window.onload = function() {
+  //             window.print();
+  //             setTimeout(function() { window.close(); }, 500);
+  //           };
+  //         </script>
+  //       </body>
+  //     </html>
+  //   `;
+
+  //   const printWindow = window.open("", "_blank", "width=400,height=600");
+  //   if (!printWindow) {
+  //     setError("Print popup blocked. Please allow popups and try again.");
+  //     return;
+  //   }
+  //   printWindow.document.open();
+  //   printWindow.document.write(receiptHtml);
+  //   printWindow.document.close();
+  // };
 
   const handleSell = async () => {
     if (cartItems.length === 0 || balance < 0) return;

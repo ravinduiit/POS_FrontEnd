@@ -2,8 +2,8 @@ import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import axiosInstance from "./axiosInstance";
 
-const API_BASE_URL = "http://localhost:3000/api";
-
+// const API_BASE_URL = "http://localhost:3000/api";
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 export const loginUser = async (email, password) => {
   const response = await axiosInstance.post("/auth/login", {
     email,

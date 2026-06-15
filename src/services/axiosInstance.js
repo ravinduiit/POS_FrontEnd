@@ -1,8 +1,14 @@
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
+// const axiosInstance = axios.create({
+//   baseURL: "http://localhost:3000/api",
+//   headers: {
+//     "Content-Type": "application/json",
+//   },
+// });
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:3000/api",
+  baseURL: "https://pos-api.buylottox.com/api",
   headers: {
     "Content-Type": "application/json",
   },
@@ -64,7 +70,7 @@ axiosInstance.interceptors.response.use(
         }
 
         const response = await axios.post(
-          "http://localhost:3000/api/auth/refresh",
+          "https://pos-api.buylottox.com/api/auth/refresh",
           {
             refreshToken,
           }

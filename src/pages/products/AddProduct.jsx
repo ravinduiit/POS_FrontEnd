@@ -21,6 +21,7 @@ function AddProduct() {
     sellingPrice: "",
     best_price: "",
     stockQty: "",
+    rate: "",
     reorderLevel: 5,
     description: "",
     image: "",
@@ -107,6 +108,7 @@ function AddProduct() {
         wholesale_price: Number(formData.wholesale_price),
         best_price: Number(formData.best_price),
         stockQty: Number(formData.stockQty),
+        rate: Number(formData.rate),
         reorderLevel: Number(formData.reorderLevel),
         description: formData.description,
         image: formData.image,
@@ -128,6 +130,7 @@ function AddProduct() {
         sellingPrice: "",
         best_price: "",
         stockQty: "",
+        rate: "",
         reorderLevel: 5,
         description: "",
         image: "",
@@ -273,6 +276,19 @@ function AddProduct() {
             </div>
 
             <div className="form-group">
+              <label>Stock Quantity *</label>
+              <input
+                type="number"
+                name="stockQty"
+                placeholder="Enter stock quantity"
+                value={formData.stockQty}
+                onChange={handleChange}
+                min="0"
+                required
+              />
+            </div>
+
+            <div className="form-group">
               <label>Selling Price *</label>
               <input
                 type="number"
@@ -286,17 +302,15 @@ function AddProduct() {
               />
             </div>
 
-            <div className="form-group">
-              <label>Best Price *</label>
+             <div className="form-group">
+              <label>Reorder Level</label>
               <input
                 type="number"
-                name="best_price"
-                placeholder="Enter selling price"
-                value={formData.best_price}
+                name="reorderLevel"
+                placeholder="Enter reorder level"
+                value={formData.reorderLevel}
                 onChange={handleChange}
                 min="0"
-                step="0.01"
-                required
               />
             </div>
 
@@ -315,29 +329,33 @@ function AddProduct() {
             </div>
 
             <div className="form-group">
-              <label>Stock Quantity *</label>
+              <label>Rate </label>
               <input
                 type="number"
-                name="stockQty"
-                placeholder="Enter stock quantity"
-                value={formData.stockQty}
+                name="rate"
+                placeholder="Enter Rate"
+                value={formData.rate}
                 onChange={handleChange}
                 min="0"
+                step="0.01"
                 required
               />
             </div>
-
+            
             <div className="form-group">
-              <label>Reorder Level</label>
+              <label>Best Price *</label>
               <input
                 type="number"
-                name="reorderLevel"
-                placeholder="Enter reorder level"
-                value={formData.reorderLevel}
+                name="best_price"
+                placeholder="Enter selling price"
+                value={formData.best_price}
                 onChange={handleChange}
                 min="0"
+                step="0.01"
+                required
               />
             </div>
+           
 
             {/* <div className="form-group">
               <label>Image URL</label>

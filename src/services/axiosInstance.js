@@ -1,18 +1,18 @@
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
-// const axiosInstance = axios.create({
-//   baseURL: "http://localhost:3000/api",
-//   headers: {
-//     "Content-Type": "application/json",
-//   },
-// });
 const axiosInstance = axios.create({
-  baseURL: "https://pos-api.buylottox.com/api",
+  baseURL: "http://localhost:3000/api",
   headers: {
     "Content-Type": "application/json",
   },
 });
+// const axiosInstance = axios.create({
+//   baseURL: "https://pos-api.buylottox.com/api",
+//   headers: {
+//     "Content-Type": "application/json",
+//   },
+// });
 
 const saveUserFromToken = (accessToken) => {
   const decodedUser = jwtDecode(accessToken);

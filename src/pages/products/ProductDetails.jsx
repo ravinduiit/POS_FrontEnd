@@ -24,6 +24,7 @@ function ProductDetails() {
     sellingPrice: "",
     wholesale_price: "",
     best_price: "",
+    rate: "",
     stockQty: "",
     reorderLevel: "",
     description: "",
@@ -68,6 +69,7 @@ function ProductDetails() {
         stockQty: product.stockQty ?? "",
         reorderLevel: product.reorderLevel ?? "",
         wholesale_price: product.wholesale_price ?? "",
+        rate: product.rate ?? "",
         description: product.description || "",
         image: product.image || "",
         lastStockFillingDDate: product.lastStockFillingDDate
@@ -124,6 +126,7 @@ function ProductDetails() {
         sellingPrice: Number(formData.sellingPrice),
         stockQty: Number(formData.stockQty),
         wholesale_price: Number(formData.wholesale_price),
+        rate: Number(formData.rate),
         reorderLevel: Number(formData.reorderLevel),
         best_price: Number(formData.best_price),
         description: formData.description,
@@ -286,6 +289,18 @@ function ProductDetails() {
             </div>
 
             <div className="form-group">
+              <label>Stock Quantity *</label>
+              <input
+                type="number"
+                name="stockQty"
+                value={formData.stockQty}
+                onChange={handleChange}
+                min="0"
+                required
+              />
+            </div>
+
+            <div className="form-group">
               <label>Selling Price *</label>
               <input
                 type="number"
@@ -295,6 +310,29 @@ function ProductDetails() {
                 min="0"
                 step="0.01"
                 required
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Reorder Level</label>
+              <input
+                type="number"
+                name="reorderLevel"
+                value={formData.reorderLevel}
+                onChange={handleChange}
+                min="0"
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Rate</label>
+              <input
+                type="number"
+                name="rate"
+                value={formData.rate}
+                onChange={handleChange}
+                min="0"
+                step="0.01"
               />
             </div>
 
@@ -324,29 +362,7 @@ function ProductDetails() {
               />
             </div>
 
-
-            <div className="form-group">
-              <label>Stock Quantity *</label>
-              <input
-                type="number"
-                name="stockQty"
-                value={formData.stockQty}
-                onChange={handleChange}
-                min="0"
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Reorder Level</label>
-              <input
-                type="number"
-                name="reorderLevel"
-                value={formData.reorderLevel}
-                onChange={handleChange}
-                min="0"
-              />
-            </div>
+            
 
             <div className="form-group">
               <label>Last Stock Filling Date</label>

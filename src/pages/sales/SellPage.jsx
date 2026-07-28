@@ -24,7 +24,7 @@ export default function SellPage() {
   // Checkout States
   const [cutDebit, setCutDebit] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("cash");
-  const [saleType, setSaleType] = useState("grocery");
+  const [saleType, setSaleType] = useState("Retail");
   const [customer_id, setCustomer_id] = useState(0);
   const [customerList, setCustomerList] = useState([]);
   const [paidAmount, setPaidAmount] = useState("");
@@ -77,7 +77,6 @@ export default function SellPage() {
   const fetchProducts = async (q) => {
     try {
       const data = await searchProductsForSale(q);
-      console.log("Search Results:", data);
       const items = Array.isArray(data) ? data : data.products || [];
       setFilteredProducts(items);
       setSelectedIndex(0); // Reset selection to top item
@@ -196,7 +195,7 @@ export default function SellPage() {
     setPaidAmount("");
     setDiscount(0);
     setPaymentMethod("cash");
-    setSaleType("grocery");
+    setSaleType("Retail");
     setCutDebit(false);
     setCustomer_id(0);
     setShowPaymentModal(false);
@@ -594,7 +593,7 @@ const printReceipt = (saleData) => {
           onChange={(e) => setSaleType(e.target.value)}
           
         >
-          <option value="grocery">Grocery</option>
+          <option value="Retail">Retail</option>
           <option value="wholesale">Wholesale</option>
         </select>
       </div>
@@ -710,7 +709,7 @@ const printReceipt = (saleData) => {
                 </tr>
               ) : (
                 [...cartItems].reverse().map((item, index) => (
-                  <tr key={item.product_id} className={index % 2 === 0 ? "even-row" : "odd-row"}>
+                  <tr key={item.product_id} className={`${index % 2 === 0 ? "even-row" : "odd-row"} ${item.sellingPrice < item.costPrice ? "price-warning-row" : ""}`}>
                     <td className="font-bold">{item.sinhala_name || item.name}</td>
                     <td className="text-center font-bold">{item.quantity}</td>
                     {/* <td className="text-right">

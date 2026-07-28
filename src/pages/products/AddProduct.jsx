@@ -288,13 +288,13 @@ function AddProduct() {
               />
             </div>
 
-            <div className="form-group">
-              <label>Selling Price *</label>
+           <div className="form-group">
+              <label>wholesale Price *</label>
               <input
                 type="number"
-                name="sellingPrice"
-                placeholder="Enter selling price"
-                value={formData.sellingPrice}
+                name="wholesale_price"
+                placeholder="Enter wholesale price"
+                value={formData.wholesale_price}
                 onChange={handleChange}
                 min="0"
                 step="0.01"
@@ -313,20 +313,21 @@ function AddProduct() {
                 min="0"
               />
             </div>
-
-            <div className="form-group">
-              <label>wholesale Price *</label>
+             <div className="form-group">
+              <label>Selling Price *</label>
               <input
                 type="number"
-                name="wholesale_price"
-                placeholder="Enter wholesale price"
-                value={formData.wholesale_price}
+                name="sellingPrice"
+                placeholder="Enter selling price"
+                value={formData.sellingPrice}
                 onChange={handleChange}
                 min="0"
                 step="0.01"
                 required
               />
             </div>
+
+            
 
             <div className="form-group">
               <label>Rate </label>
